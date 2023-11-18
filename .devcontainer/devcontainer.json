@@ -3,7 +3,7 @@
 {
 	"name": "Kaggle",
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-	"image": "nvcr.io/nvidia/pytorch:23.06-py3",
+	"image": "gcr.io/kaggle-gpu-images/python",
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	// "features": {},
