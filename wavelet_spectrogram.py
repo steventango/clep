@@ -86,12 +86,12 @@ def spectrogram_plot(z, times, frequencies, coif, cmap=None, norm=Normalize(), a
     ax.plot(times, coif)
     ax.fill_between(times, coif, step="mid", alpha=0.4)
 
-    if colorbar:
-        cbaxes = inset_axes(ax, width="2%", height="90%", loc=4)
-        fig.colorbar(im, cax=cbaxes, orientation="vertical")
+    # if colorbar:
+    #     cbaxes = inset_axes(ax, width="2%", height="90%", loc=4)
+    #     fig.colorbar(im, cax=cbaxes, orientation="vertical")
 
-    ax.set_xlim(times.min(), times.max())
-    ax.set_ylim(frequencies.min(), frequencies.max())
+    # ax.set_xlim(times.min(), times.max())
+    # ax.set_ylim(frequencies.min(), frequencies.max())
 
     return ax
 
