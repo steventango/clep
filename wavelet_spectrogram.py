@@ -3,7 +3,7 @@ import time
 import numpy as np
 import pywt
 from matplotlib import pyplot as plt
-from matplotlib.colors import LogNorm
+from matplotlib.colors import LogNorm, Normalize
 from scipy import ndimage, signal
 from matplotlib.cm import get_cmap
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
