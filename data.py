@@ -12,7 +12,7 @@ from wavelet_spectrogram import cwt_spectrogram
 set_verbosity_warning()
 logging.basicConfig(filename='train.log', level=logging.INFO)
 
-dataset = load_dataset("DavidVivancos/MindBigData2022_MNIST_IN")
+dataset = load_dataset("DavidVivancos/MindBigData2022_MNIST_MU")
 logging.info(list(dataset["train"][0].items())[:8])
 
 # %%
@@ -30,6 +30,7 @@ S = max(H, W)
 
 # %%
 map_digit_to_token = {
+    -1: "none",
     0: "zero",
     1: "one",
     2: "two",
@@ -48,11 +49,12 @@ tokenizer = CLIPTokenizerFast.from_pretrained("openai/clip-vit-large-patch14")
 
 map_digit_to_input_ids = {
     digit: tokenizer(f"{map_digit_to_token[digit]}", padding=True).input_ids
-    for digit in range(10)
+    for digit in range(-1, 10)
 }
 
 def preprocess(inputs):
   B = len(inputs["label"])
+  inputs["labels"] = inputs["label"]
   inputs["input_ids"] = [map_digit_to_input_ids[label] for label in inputs["label"]]
   inputs["attention_mask"] = [[1] * 3] * B
   samples = np.zeros((B, C, S, S))
@@ -67,7 +69,7 @@ def preprocess(inputs):
 
 # %%
 item = preprocess(dataset["train"][:8])
-item["label"], item["input_ids"], item['pixel_values'].shape
+item["labels"], item["input_ids"], item['pixel_values'].shape
 
 
 # %%
@@ -76,6 +78,6 @@ remove_columns = [f"{channel}-{i}" for channel, i in itertools.product(channels,
 
 # %%
 preprocessed_dataset = dataset.map(preprocess, batched=True, remove_columns=remove_columns)
-
+print("done preprocessing!")
 # %%
-preprocessed_dataset.save_to_disk("eeg_mnist_preprocessed")
+preprocessed_dataset.save_to_disk("eeg_mnist_preprocessed", num_proc=8)

@@ -24,6 +24,7 @@ class TrainableCLIPModel(CLIPModel):
         output_attentions: Optional[bool] = None,
         output_hidden_states: Optional[bool] = None,
         return_dict: Optional[bool] = None,
+        **kwargs,
     ) -> Union[Tuple, CLIPOutput]:
         r"""
         Returns:

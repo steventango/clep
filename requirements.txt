@@ -2,3 +2,4 @@ datasets
 diffusers
 transformers[torch]
 PyWavelets
+evaluate
