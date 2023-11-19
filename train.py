@@ -56,34 +56,7 @@ tokenizer = CLIPTokenizerFast.from_pretrained("openai/clip-vit-large-patch14")
 
 
 # %%
-def preprocess(inputs, return_loss=True):
-  labels = [map_digit_to_token[label] for label in inputs["label"]]
-  tokenized_labels = tokenizer(labels, padding=True, return_tensors="pt")
-  inputs["input_ids"] = tokenized_labels.input_ids
-  inputs["attention_mask"] = tokenized_labels.attention_mask
-  B = len(inputs["label"])
-  samples = np.zeros((B, C, S, S))
-  for b in range(B):
-    for i, channel in enumerate(channels):
-      sample = np.array([inputs[f"{channel}-{j}"][b] for j in range(L)])
-      power, *_ = cwt_spectrogram(sample, 120, nNotes=24, detrend=True, normalize=True)
-      samples[b, i, :min(H, S), :min(W, S)] = power.squeeze()
-  inputs["pixel_values"] = samples
-  return inputs
-
-
-# %%
-item = preprocess(dataset["train"][:8])
-item["label"], item["input_ids"], item['pixel_values'].shape
-
-
-# %%
-remove_columns = [f"{channel}-{i}" for channel, i in itertools.product(channels, range(L))] + ["label"]
-
-
-# %%
-preprocessed_dataset = dataset.map(preprocess, batched=True, remove_columns=remove_columns, num_proc=24)
-
+preprocessed_dataset = load_dataset("eeg_mnist_preprocessed")
 
 # %%
 configuration = CLIPVisionConfig(
