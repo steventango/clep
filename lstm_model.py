@@ -4,7 +4,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 class EEGFeatNet(nn.Module):
-    def __init__(self, n_channels, n_features, projection_dim, num_layers=1):
+    def __init__(self, n_channels, n_features=128, projection_dim=128, num_layers=1):
         super(EEGFeatNet, self).__init__()
         self.hidden_size = n_features
         self.num_layers = num_layers

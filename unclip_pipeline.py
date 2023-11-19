@@ -4,9 +4,9 @@ from diffusers.utils import load_image
 from transformers import CLIPTextModelWithProjection, CLIPVisionModelWithProjection, CLIPImageProcessor, CLIPTokenizerFast
 from pathlib import Path
 
-def main():
+def main(device):
     text_model = CLIPTextModelWithProjection.from_pretrained("openai/clip-vit-large-patch14", torch_dtype=torch.float16)
-    text_model = text_model.to("cuda")
+    text_model = text_model.to(device)
     tokenizer = CLIPTokenizerFast.from_pretrained("openai/clip-vit-large-patch14")
 
     texts = ["cat"]
@@ -17,13 +17,13 @@ def main():
         truncation=True,
         return_tensors="pt",
     )
-    text_inputs = {k: v.to("cuda") for k, v in text_inputs.items()}
+    text_inputs = {k: v.to(device) for k, v in text_inputs.items()}
 
     with torch.no_grad():
         outputs = text_model(**text_inputs)
 
     pipe = UnCLIPPipeline.from_pretrained("kakaobrain/karlo-v1-alpha", torch_dtype=torch.float16)
-    pipe = pipe.to("cuda")
+    pipe = pipe.to(device)
 
     images = pipe(
         text_model_output=outputs,
@@ -39,4 +39,10 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    if torch.cuda.is_available():
+        device = "cuda"
+    else:
+        device = "mps"
+    print(device)
+    
+    main(device)
