@@ -160,3 +160,4 @@ cython_debug/
 #.idea/
 
 clep_trainer/
+eeg_mnist_preprocessed/
